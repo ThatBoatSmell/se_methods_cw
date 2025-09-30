@@ -6,11 +6,11 @@ Create a new repository on GitHub
 
 I added a LICENCE(Apache) .gitignore using Maven template and README.md
 
-Clone to your machine
+Clone to your machine (I cloned to Desktop)
 
 ![clone](img/clone.png)
 
-Create a new Maven project in that folder using Java 17
+Create a new Maven project named the same as the project (in the folder you cloned to (for me Desktop) using Java 17
 
 
 
