@@ -22,11 +22,10 @@ Create a new Maven project in that folder using Java 17
 
 The .gitignore only needs the following
 
-```xml
+```
 target/
 .mvn/
 .idea/
-
 ```
 
 Add a dependency to the Maven Config (pom.xml) for the MySQL connector. Your pom.xml should now look like
