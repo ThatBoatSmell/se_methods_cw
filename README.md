@@ -281,10 +281,54 @@ Push
 
 We can now set-up GitHub Actions. On your GitHub repository select the actions tab at the top then select *set up workflow yourself*
 
-![image7](C:\Users\Kev\Desktop\sem-quick-cw\img\image7.png)
+![image7](img/image7.png)
 
 This will create a file in your repository named 
 
 `.github/workflows/main.yml`
 
 Replace the default text with the following
+
+```xml
+name: A workflow for my App
+on: push
+
+jobs:
+  Build:
+    name: Build and Start Using docker-compose
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'adopt'   
+      - name: Package and Run docker compose
+        run: |
+          mvn package -DskipTests
+          docker compose up --abort-on-container-exit
+      - name: view logs
+        run: docker logs sem-quick-cw-app-1
+
+```
+
+do a git pull
+
+Make some changes then commit and push
+
+![actionsuccess](img/actionsuccess.png)
+
+If successful the view logs section should show Successfully connected at the bottom (once the database container builds)
+
+
+
+We deserve a badge
+
+
+```
+![workflow](https://github.com/<UserName>/<RepositoryName>/actions/workflows/main.yml/badge.svg)
+```
+
+![workflow](https://github.com/Kevin-Sim/sem-quick-cw/actions/workflows/main.yml/badge.svg)
