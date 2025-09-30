@@ -17,5 +17,5 @@ jobs:
         run: |
           mvn package -DskipTests
           docker compose up --abort-on-container-exit
-#      - name: view logs
-#        run: docker logs devops3-app-1
+      - name: view logs
+        run: docker logs devops3-app-1
