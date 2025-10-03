@@ -2,6 +2,9 @@ package com.napier.sem;
 
 import java.sql.*;
 
+/**
+ * Demo App
+ */
 public class App
 {
 	public static void main(String[] args)
