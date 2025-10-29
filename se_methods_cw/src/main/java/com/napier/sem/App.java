@@ -28,6 +28,7 @@ public class App
                 // Wait a bit for db to start
                 Thread.sleep(1000);
                 // Connect to database
+                // this may need to be changed back to db:3306 instead of localhost:33060 !!!
                 con = DriverManager.getConnection("jdbc:mysql://localhost:33060/world?useSSL=false&allowPublicKeyRetrieval=true", "root", "example");
                 System.out.println("Successfully connected");
                 // Wait a bit
