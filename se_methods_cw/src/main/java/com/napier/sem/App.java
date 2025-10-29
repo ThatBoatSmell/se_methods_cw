@@ -28,7 +28,7 @@ public class App
                 // Wait a bit for db to start
                 Thread.sleep(1000);
                 // Connect to database
-                con = DriverManager.getConnection("jdbc:mysql://db:3306/world?useSSL=false&allowPublicKeyRetrieval=true", "root", "example");
+                con = DriverManager.getConnection("jdbc:mysql://localhost:33060/world?useSSL=false&allowPublicKeyRetrieval=true", "root", "example");
                 System.out.println("Successfully connected");
                 // Wait a bit
                 Thread.sleep(1000);
@@ -50,6 +50,20 @@ public class App
         {
             try
             {
+                Statement stmt = con.createStatement();
+                String strSelect = "SELECT capital, name "
+                        + "FROM country";
+                ResultSet rset = stmt.executeQuery(strSelect);
+
+                while(rset.next())
+                {
+                    Country country = new Country();
+                    country.capital = rset.getString("capital");
+                    country.name = rset.getString("name");
+                    System.out.println("Name = " + country.name + ", Capital = " + country.capital);
+                }
+
+                System.out.println("This is where i get to");
                 // Close connection
                 con.close();
             }
