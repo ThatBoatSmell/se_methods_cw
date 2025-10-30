@@ -4,7 +4,7 @@ public class City {
 
     public String name;
 
-    public int countrycode;
+    public int countryCode;
 
     public String district;
 
