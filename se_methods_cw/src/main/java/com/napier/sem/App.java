@@ -51,6 +51,7 @@ public class App
         {
             try
             {
+                // This is a basic statement to test connecting to the database. I have no idea why capital is returning a number
                 Statement stmt = con.createStatement();
                 String strSelect = "SELECT capital, name "
                         + "FROM country";
@@ -64,9 +65,30 @@ public class App
                     System.out.println("Name = " + country.name + ", Capital = " + country.capital);
                 }
 
-                System.out.println("This is where i get to");
+                System.out.println("THIS IS THE END OF THE FIRST QUERY");
+
+                Statement stmt2 = con.createStatement();
+                String strSelect2 = "SELECT name, countrycode, district, population "
+                        + "FROM city";
+                ResultSet rset2 = stmt2.executeQuery(strSelect2);
+
+                while(rset2.next())
+                {
+                    City city = new City();
+                    city.name = rset2.getString("name");
+                   // city.countrycode = rset2.getInt("countrycode");
+                    // ", Country = " + city.countrycode +
+                    city.district = rset2.getString("district");
+                    city.population = rset2.getInt("population");
+                    System.out.println("Name = " + city.name + ", District = " + city.district  + ", Population = " + city.population);
+                }
+
+                System.out.println("THIS IS THE END OF THE SECOND QUERY");
+
+
                 // Close connection
                 con.close();
+
             }
             catch (Exception e)
             {
