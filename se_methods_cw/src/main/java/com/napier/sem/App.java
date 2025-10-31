@@ -50,6 +50,35 @@ public class App {
         }
     }
 
+    /* public this is going to be a function that executes a predefined SQL query
+
+                    // This is a basic statement to test connecting to the database. I have no idea why capital is returning a number
+                Statement stmt = a.con.createStatement();
+                String strSelect = "SELECT capital, name "
+                        + "FROM country "
+                        + "LIMIT 10";
+                ResultSet rset = stmt.executeQuery(strSelect);
+
+                while (rset.next()) {
+                    Country country = new Country();
+                    country.capital = rset.getString("capital");
+                    country.name = rset.getString("name");
+                    System.out.println("Name = " + country.name + ", Capital = " + country.capital);
+                }
+
+// The top N populated cities in a region where N is provided by the user.
+//The top N populated cities in a country where N is provided by the user.
+//The top N populated cities in a district where N is provided by the user.
+//All the capital cities in the world organised by largest population to smallest.
+//All the capital cities in a continent organised by largest population to smallest.
+//All the capital cities in a region organised by largest to smallest.
+//The top N populated capital cities in the world where N is provided by the user.
+//The top N populated capital cities in a continent where N is provided by the user.
+//The top N populated capital cities in a region where N is provided by the user.
+//The population of people, people living in cities, and people not living in cities in each continent.
+//The population of people, people living in cities, and people not living in cities in each region.
+//The population of people, people living in cities, and people not living in cities in each country.
+    */
     public static void main(String[] args) {
 
         App a = new App();
