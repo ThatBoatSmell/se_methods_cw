@@ -160,7 +160,7 @@ public class App {
             try{
                 Statement top_pop_region = con.createStatement();
                 // First part of statement is straight forward - select relevant info based to display at end
-                String strSelect_top_pop_region = "SELECT country1.name, country1.region, city1.district AS district, city1.population AS population "
+                String strSelect_top_pop_region = "SELECT country1.name, city1.name as city_name, country1.region, city1.district AS district, city1.population AS population "
                         + "FROM country AS country1 "
                         // join on the city table, as it contains relevant population info
                         + "JOIN city AS city1 ON country1.code = city1.countryCode "
@@ -179,24 +179,25 @@ public class App {
                 String lastRegion = null;
 
                 while (results_top_pop_region.next()) {
-                    Country country3 = new Country();
-                    City city3 = new City();
-                    city3.district = results_top_pop_region.getString("district");
-                    country3.name = results_top_pop_region.getString("name");
-                    country3.region = results_top_pop_region.getString("region");
-                    country3.population = results_top_pop_region.getInt("population");
+                    Country country = new Country();
+                    City city = new City();
+                    city.name = results_top_pop_region.getString("city_name");
+                    city.district = results_top_pop_region.getString("district");
+                    country.name = results_top_pop_region.getString("name");
+                    country.region = results_top_pop_region.getString("region");
+                    country.population = results_top_pop_region.getInt("population");
 
                     // if lastRegion is null (like at the start) or is not equal to the current value of region
                     // this formatting can be safely removed, doesn't affect anything important
-                    if (lastRegion == null || !lastRegion.equals(country3.region)) {
+                    if (lastRegion == null || !lastRegion.equals(country.region)) {
                         // print new line and a tag showing name of new region
-                        System.out.println("\n... Region: " + country3.region + " ...");
+                        System.out.println("\n... Region: " + country.region + " ...");
                         // then set lastRegion to current region
-                        lastRegion = country3.region;
+                        lastRegion = country.region;
                     }
 
-                    System.out.println("Name = " + country3.name + ", District = " + city3.district +
-                            ", Region = " + country3.region + ", Population = " + country3.population);
+                    System.out.println("Country : " + country.name + " | City : " + city.name + " | District : " + city.district +
+                            " | Region : " + country.region + " | Population : " + country.population);
                 }
             } // end of try
             catch (SQLException e) {
@@ -210,30 +211,37 @@ public void top_pop_country_user_input(int limit){
     if (con != null){
         try{
             Statement top_pop_country = con.createStatement();
-            // First part of statement is straight forward - select relevant info based to display at end // removing  city1.name AS capital, from query to test
-            String strSelect_top_pop_country = "SELECT country1.name, country1.region, city1.population AS population "
+            String strSelect_top_pop_country = "SELECT country1.name, city1.name AS city_name, country1.region, city1.district AS district, city1.population AS population "
                     + "FROM country AS country1 "
-                    // join on the city table, as it contains relevant population info
                     + "JOIN city AS city1 ON country1.code = city1.countryCode "
-                    // we then do a subquery - counting how many other cities in the same region have a larger population
-                    // if it's less than the limit set by the user, then it has the correct outcome for that region
                     + "WHERE ( "
-                        + "SELECT COUNT(*) FROM country AS country2 "
-                        + "JOIN city AS city2 ON country2.code = city2.countryCode "
-                        + "WHERE country2.region = country1.region AND city2.population > city1.population) "
+                        + "SELECT COUNT(*) FROM city AS city2 "
+                        + "WHERE city2.countryCode = country1.code AND city2.population > city1.population) "
                     + "< " + limit
                     + " ORDER BY country1.region, city1.population DESC";
 
             ResultSet results_top_pop_country= top_pop_country .executeQuery(strSelect_top_pop_country);
 
+            String lastCountry = null;
+
             while (results_top_pop_country.next()) {
-                Country country3 = new Country();
-                //  country3.capital = results_top_pop_region.getString("capital");
-                country3.name = results_top_pop_country.getString("name");
-                country3.region = results_top_pop_country.getString("region");
-                country3.population = results_top_pop_country.getInt("population");
-                System.out.println("Name = " + country3.name + /*", Capital = " + country3.capital + */
-                        ", Region = " + country3.region + ", Population = " + country3.population);
+                Country country = new Country();
+                City city = new City();
+                city.name = results_top_pop_country.getString("city_name");
+                city.district = results_top_pop_country.getString("district");
+                country.name = results_top_pop_country.getString("name");
+                country.region = results_top_pop_country.getString("region");
+                country.population = results_top_pop_country.getInt("population");
+
+                if (lastCountry == null || !lastCountry.equals(country.name)) {
+                    // print new line and a tag showing name of new region
+                    System.out.println("\n... Country: " + country.name + " ...");
+                    // then set lastRegion to current region
+                    lastCountry = country.name;
+                }
+
+                System.out.println("Country = " + country.name + " | City = " + city.name + " | District = " + city.district +
+                        " | Region = " + country.region + " | Population = " + country.population);
             }
         } // end of try
         catch (SQLException e) {
@@ -258,7 +266,10 @@ public void top_pop_country_user_input(int limit){
 
         a.connect();
         if (a.con != null) {
+
                 a.top_pop_region_user_input(3);
+                a.top_pop_country_user_input(3);
+
                 a.disconnect();
 
         }
