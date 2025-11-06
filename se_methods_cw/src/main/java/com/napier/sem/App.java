@@ -1,5 +1,34 @@
 package com.napier.sem;
+/* REFERENCE FOR REPORTS
+A country report requires the following columns:
 
+Code.
+Name.
+Continent.
+Region.
+Population.
+Capital.
+
+A city report requires the following columns:
+
+Name.
+Country.
+District.
+Population.
+
+A capital city report requires the following columns:
+
+Name.
+Country.
+Population.
+
+For the population reports, the following information is requested:
+
+The name of the continent/region/country.
+The total population of the continent/region/country.
+The total population of the continent/region/country living in cities (including a %).
+The total population of the continent/region/country not living in cities (including a %).
+ */
 import java.sql.*;
 
 public class App {
@@ -86,8 +115,8 @@ public class App {
                 while (rset2.next()) {
                     City city = new City();
                     city.name = rset2.getString("name");
-                    // city.countrycode = rset2.getInt("countrycode");
-                    // ", Country = " + city.countrycode +
+                    // city.countryCode = rset2.getInt("countryCode");
+                    // ", Country = " + city.countryCode +
                     city.district = rset2.getString("district");
                     city.population = rset2.getInt("population");
                     System.out.println("Name = " + city.name + ", District = " + city.district + ", Population = " + city.population);
@@ -125,7 +154,93 @@ public class App {
     }
 
 // The top N populated cities in a region where N is provided by the user.
+
+    public void top_pop_region_user_input(int limit){
+        if (con != null){
+            try{
+                Statement top_pop_region = con.createStatement();
+                // First part of statement is straight forward - select relevant info based to display at end
+                String strSelect_top_pop_region = "SELECT country1.name, country1.region, city1.district AS district, city1.population AS population "
+                        + "FROM country AS country1 "
+                        // join on the city table, as it contains relevant population info
+                        + "JOIN city AS city1 ON country1.code = city1.countryCode "
+                        // we then do a subquery - counting how many other cities in the same region have a larger population
+                        // if it's less than the limit set by the user, then it has the correct outcome for that region
+                        + "WHERE ( "
+                            + "SELECT COUNT(*) FROM country AS country2 "
+                            + "JOIN city AS city2 ON country2.code = city2.countryCode "
+                            + "WHERE country2.region = country1.region AND city2.population > city1.population) "
+                        + "< " + limit
+                        + " ORDER BY country1.region, city1.population DESC";
+
+                ResultSet results_top_pop_region = top_pop_region .executeQuery(strSelect_top_pop_region);
+
+                // null string for formatting results
+                String lastRegion = null;
+
+                while (results_top_pop_region.next()) {
+                    Country country3 = new Country();
+                    City city3 = new City();
+                    city3.district = results_top_pop_region.getString("district");
+                    country3.name = results_top_pop_region.getString("name");
+                    country3.region = results_top_pop_region.getString("region");
+                    country3.population = results_top_pop_region.getInt("population");
+
+                    // if lastRegion is null (like at the start) or is not equal to the current value of region
+                    // this formatting can be safely removed, doesn't affect anything important
+                    if (lastRegion == null || !lastRegion.equals(country3.region)) {
+                        // print new line and a tag showing name of new region
+                        System.out.println("\n... Region: " + country3.region + " ...");
+                        // then set lastRegion to current region
+                        lastRegion = country3.region;
+                    }
+
+                    System.out.println("Name = " + country3.name + ", District = " + city3.district +
+                            ", Region = " + country3.region + ", Population = " + country3.population);
+                }
+            } // end of try
+            catch (SQLException e) {
+                System.out.println("SQL error occurred: " + e.getMessage());
+            }
+        }// end of if
+    } // end of function
+
 //The top N populated cities in a country where N is provided by the user.
+public void top_pop_country_user_input(int limit){
+    if (con != null){
+        try{
+            Statement top_pop_country = con.createStatement();
+            // First part of statement is straight forward - select relevant info based to display at end // removing  city1.name AS capital, from query to test
+            String strSelect_top_pop_country = "SELECT country1.name, country1.region, city1.population AS population "
+                    + "FROM country AS country1 "
+                    // join on the city table, as it contains relevant population info
+                    + "JOIN city AS city1 ON country1.code = city1.countryCode "
+                    // we then do a subquery - counting how many other cities in the same region have a larger population
+                    // if it's less than the limit set by the user, then it has the correct outcome for that region
+                    + "WHERE ( "
+                        + "SELECT COUNT(*) FROM country AS country2 "
+                        + "JOIN city AS city2 ON country2.code = city2.countryCode "
+                        + "WHERE country2.region = country1.region AND city2.population > city1.population) "
+                    + "< " + limit
+                    + " ORDER BY country1.region, city1.population DESC";
+
+            ResultSet results_top_pop_country= top_pop_country .executeQuery(strSelect_top_pop_country);
+
+            while (results_top_pop_country.next()) {
+                Country country3 = new Country();
+                //  country3.capital = results_top_pop_region.getString("capital");
+                country3.name = results_top_pop_country.getString("name");
+                country3.region = results_top_pop_country.getString("region");
+                country3.population = results_top_pop_country.getInt("population");
+                System.out.println("Name = " + country3.name + /*", Capital = " + country3.capital + */
+                        ", Region = " + country3.region + ", Population = " + country3.population);
+            }
+        } // end of try
+        catch (SQLException e) {
+            System.out.println("SQL error occurred: " + e.getMessage());
+        }
+    }// end of if
+} // end of function
 //The top N populated cities in a district where N is provided by the user.
 //All the capital cities in the world organised by largest population to smallest.
 //All the capital cities in a continent organised by largest population to smallest.
@@ -143,17 +258,7 @@ public class App {
 
         a.connect();
         if (a.con != null) {
-                a.test();
-
-                System.out.println("\nTHIS IS THE END OF THE FIRST QUERY\n");
-
-                a.test2();
-
-                System.out.println("\nTHIS IS THE END OF THE SECOND QUERY\n");
-
-                a.test3();
-
-                System.out.println("\nTHIS IS THE END OF THE THIRD QUERY\n");
+                a.top_pop_region_user_input(3);
                 a.disconnect();
 
         }
