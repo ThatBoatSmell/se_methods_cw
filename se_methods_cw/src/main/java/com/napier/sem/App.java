@@ -85,16 +85,19 @@ public class App {
 
                 // This is a basic statement to test connecting to the database.
                 Statement stmt = con.createStatement();
-                String strSelect = "SELECT capital, name "
+                String strSelect = "SELECT capital, country.name, city.name, city.district "
                         + "FROM country "
-                        + "LIMIT 10";
+                        + "JOIN city ON country.code = city.countryCode "
+                        + "WHERE city.district = 'Scotland' ";
                 ResultSet rset = stmt.executeQuery(strSelect);
 
                 while (rset.next()) {
                     Country country = new Country();
+                    City city = new City();
                     country.capital = rset.getString("capital");
-                    country.name = rset.getString("name");
-                    System.out.println("Name = " + country.name + ", Capital = " + country.capital);
+                    city.name = rset.getString("city.name");
+                    country.name = rset.getString("country.name");
+                    System.out.println("Country = " + country.name +  "City = " + city.name + ", Capital = " + country.capital);
                 }
             }
             catch (SQLException e) {
@@ -199,6 +202,7 @@ public class App {
                     System.out.println("Country : " + country.name + " | City : " + city.name + " | District : " + city.district +
                             " | Region : " + country.region + " | Population : " + country.population);
                 }
+                System.out.println("\n... End of Query ...");
             } // end of try
             catch (SQLException e) {
                 System.out.println("SQL error occurred: " + e.getMessage());
@@ -234,22 +238,65 @@ public void top_pop_country_user_input(int limit){
                 country.population = results_top_pop_country.getInt("population");
 
                 if (lastCountry == null || !lastCountry.equals(country.name)) {
-                    // print new line and a tag showing name of new region
                     System.out.println("\n... Country: " + country.name + " ...");
-                    // then set lastRegion to current region
                     lastCountry = country.name;
                 }
 
                 System.out.println("Country = " + country.name + " | City = " + city.name + " | District = " + city.district +
                         " | Region = " + country.region + " | Population = " + country.population);
             }
+            System.out.println("\n... End of Query ...");
         } // end of try
         catch (SQLException e) {
             System.out.println("SQL error occurred: " + e.getMessage());
         }
     }// end of if
 } // end of function
+
 //The top N populated cities in a district where N is provided by the user.
+public void top_pop_district_user_input(int limit){
+    if (con != null){
+        try{
+            Statement top_pop_district = con.createStatement();
+
+            String strSelect_top_pop_district = "SELECT country1.name, city1.name as city_name, country1.region, city1.district AS district, city1.population AS population "
+                    + "FROM country AS country1 "
+                    + "JOIN city AS city1 ON country1.code = city1.countryCode "
+                    + "WHERE ( "
+                    + "SELECT COUNT(*) FROM city AS city2 "
+                    + "WHERE city2.district = city1.district AND city2.population > city1.population) "
+                    + "< " + limit
+                    + " ORDER BY city1.district, city1.population DESC";
+
+            ResultSet results_top_pop_district = top_pop_district.executeQuery(strSelect_top_pop_district);
+
+            // null string for formatting results
+            String lastDistrict = null;
+
+            while (results_top_pop_district.next()) {
+                Country country = new Country();
+                City city = new City();
+                city.name = results_top_pop_district.getString("city_name");
+                city.district = results_top_pop_district.getString("district");
+                country.name = results_top_pop_district.getString("name");
+                country.region = results_top_pop_district.getString("region");
+                country.population = results_top_pop_district.getInt("population");
+
+                if (lastDistrict == null || !lastDistrict.equals(city.district)) {
+                    System.out.println("\n... District: " + city.district + " ...");
+                    lastDistrict = city.district;
+                }
+
+                System.out.println("Country : " + country.name + " | City : " + city.name + " | District : " + city.district +
+                        " | Region : " + country.region + " | Population : " + country.population);
+            }
+            System.out.println("\n... End of Query ...");
+        } // end of try
+        catch (SQLException e) {
+            System.out.println("SQL error occurred: " + e.getMessage());
+        }
+    }// end of if
+} // end of function
 //All the capital cities in the world organised by largest population to smallest.
 //All the capital cities in a continent organised by largest population to smallest.
 //All the capital cities in a region organised by largest to smallest.
@@ -267,10 +314,10 @@ public void top_pop_country_user_input(int limit){
         a.connect();
         if (a.con != null) {
 
-                a.top_pop_region_user_input(3);
-                a.top_pop_country_user_input(3);
-
-                a.disconnect();
+            a.top_pop_region_user_input(3);
+            a.top_pop_country_user_input(3);
+            a.top_pop_district_user_input(3);
+            a.disconnect();
 
         }
     }
