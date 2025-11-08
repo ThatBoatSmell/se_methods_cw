@@ -3,12 +3,30 @@ services:
 
   # Build app from Dockerfile in same folder
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - se_methods_cw-network
 
   # Build the db as name world from the Dockerfile in the db folder
   # exposing the port if we want to run code outside a container
   db:
-    build: db/.
-    ports:
-      - "33060:3306"
-
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    expose:
+      - "3306:33060"
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping --silent" ]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    networks:
+      - se_methods_cw-network
+networks:
+  se_methods_cw-network:
+    driver: bridge
