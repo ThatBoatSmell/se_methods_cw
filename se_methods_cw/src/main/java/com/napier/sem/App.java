@@ -79,6 +79,11 @@ public class App {
         }
     }
 
+    // Getter for the private con field - might be required for testing
+    public Connection getConnection() {
+        return con;
+    }
+
     public void test() {
         if (con != null) {
             try {
