@@ -138,8 +138,8 @@ public class App {
 
                 String strSelect3 = "Select country.name, city.name AS capital "
                         + "FROM country "
-                        + "INNER JOIN city ON country.capital = city.id "
-                        + "LIMIT 10";
+                        + "INNER JOIN city ON country.capital = city.id ";
+                        //+ "LIMIT 10"
 
                 ResultSet rset3 = stmt3.executeQuery(strSelect3);
 
@@ -199,8 +199,8 @@ public class App {
                         lastRegion = country.region;
                     }
 
-                    System.out.println("Country : " + country.name + " | City : " + city.name + " | District : " + city.district +
-                            " | Region : " + country.region + " | Population : " + country.population);
+                    System.out.println("Country : " + country.name + " || City : " + city.name + " || District : " + city.district +
+                            " || Region : " + country.region + " || Population : " + country.population);
                 }
                 System.out.println("\n... End of Query ...");
             } // end of try
@@ -242,8 +242,8 @@ public void top_pop_country_user_input(int limit){
                     lastCountry = country.name;
                 }
 
-                System.out.println("Country = " + country.name + " | City = " + city.name + " | District = " + city.district +
-                        " | Region = " + country.region + " | Population = " + country.population);
+                System.out.println("Country = " + country.name + " || City = " + city.name + " || District = " + city.district +
+                        " || Region = " + country.region + " || Population = " + country.population);
             }
             System.out.println("\n... End of Query ...");
         } // end of try
@@ -287,8 +287,8 @@ public void top_pop_district_user_input(int limit){
                     lastDistrict = city.district;
                 }
 
-                System.out.println("Country : " + country.name + " | City : " + city.name + " | District : " + city.district +
-                        " | Region : " + country.region + " | Population : " + country.population);
+                System.out.println("Country : " + country.name + " || City : " + city.name + " || District : " + city.district +
+                        " || Region : " + country.region + " || Population : " + country.population);
             }
             System.out.println("\n... End of Query ...");
         } // end of try
@@ -297,12 +297,255 @@ public void top_pop_district_user_input(int limit){
         }
     }// end of if
 } // end of function
+
 //All the capital cities in the world organised by largest population to smallest.
+    public void all_capital_world() {
+        if (con != null) {
+            try {
+                Statement all_capital_world = con.createStatement();
+
+                String strSelect_all_capital_world = "SELECT country1.name, city1.name as city_name, country1.region, city1.district AS district, city1.population AS population "
+                        + "FROM country AS country1 "
+                        + "JOIN city AS city1 ON country1.capital = city1.id "
+                        + "ORDER BY population DESC ";
+
+                ResultSet results_all_capital_world = all_capital_world.executeQuery(strSelect_all_capital_world);
+                while (results_all_capital_world.next()) {
+                    Country country = new Country();
+                    City city = new City();
+                    city.name = results_all_capital_world.getString("city_name");
+                    city.district = results_all_capital_world.getString("district");
+                    country.name = results_all_capital_world.getString("name");
+                    country.region = results_all_capital_world.getString("region");
+                    country.population = results_all_capital_world.getInt("population");
+
+                    System.out.println("Country : " + country.name + " || City : " + city.name + " || District : " + city.district +
+                            " || Region : " + country.region + " || Population : " + country.population);
+                } // end of while
+
+            } // end try
+            catch (SQLException e) {
+                System.out.println("SQL error occurred: " + e.getMessage());
+            }// end catch
+        }// end if
+    }// end func
+
 //All the capital cities in a continent organised by largest population to smallest.
+public void all_capital_world_by_continent() {
+    if (con != null) {
+        try {
+            Statement all_capital_world_by_continent = con.createStatement();
+
+            String strSelect_all_capital_world_by_continent = "SELECT country1.name, city1.name as city_name, country1.continent, country1.region, city1.district AS district, city1.population AS population "
+                    + "FROM country AS country1 "
+                    + "JOIN city AS city1 ON country1.capital = city1.id "
+                    + "ORDER BY country1.continent, population DESC ";
+
+            ResultSet results_all_capital_world_by_continent = all_capital_world_by_continent.executeQuery(strSelect_all_capital_world_by_continent);
+
+            // null string for formatting results
+            String lastContinent = null;
+
+            while (results_all_capital_world_by_continent.next()) {
+                Country country = new Country();
+                City city = new City();
+                city.name = results_all_capital_world_by_continent.getString("city_name");
+                city.district = results_all_capital_world_by_continent.getString("district");
+                country.continent = results_all_capital_world_by_continent.getString("continent");
+                country.name = results_all_capital_world_by_continent.getString("name");
+                country.region = results_all_capital_world_by_continent.getString("region");
+                country.population = results_all_capital_world_by_continent.getInt("population");
+
+                if (lastContinent == null || !lastContinent.equals(country.continent)) {
+                    System.out.println("\n... Continent: " + country.continent + " ...");
+                    lastContinent = country.continent;
+                }
+
+                // note: not printing continent as it's a little redundant
+                System.out.println("Country : " + country.name + " || City : " + city.name +  " || District : " + city.district +
+                        " || Region : " + country.region + " || Population : " + country.population);
+            } // end of while
+
+        } // end try
+        catch (SQLException e) {
+            System.out.println("SQL error occurred: " + e.getMessage());
+        }// end catch
+    }// end if
+}// end func
+
+
 //All the capital cities in a region organised by largest to smallest.
+public void all_capital_world_by_region() {
+    if (con != null) {
+        try {
+            Statement all_capital_world_by_region = con.createStatement();
+
+            String strSelect_all_capital_world_by_region = "SELECT country1.name, city1.name as city_name, country1.region, city1.district AS district, city1.population AS population "
+                    + "FROM country AS country1 "
+                    + "JOIN city AS city1 ON country1.capital = city1.id "
+                    + "ORDER BY country1.region, population DESC ";
+
+            ResultSet results_all_capital_world_by_region = all_capital_world_by_region.executeQuery(strSelect_all_capital_world_by_region);
+
+            // null string for formatting results
+            String lastRegion = null;
+
+            while (results_all_capital_world_by_region.next()) {
+                Country country = new Country();
+                City city = new City();
+                city.name = results_all_capital_world_by_region.getString("city_name");
+                city.district = results_all_capital_world_by_region.getString("district");
+                //country.continent = results_all_capital_world_by_region.getString("continent");
+                country.name = results_all_capital_world_by_region.getString("name");
+                country.region = results_all_capital_world_by_region.getString("region");
+                country.population = results_all_capital_world_by_region.getInt("population");
+
+                if (lastRegion == null || !lastRegion.equals(country.region)) {
+                    System.out.println("\n... Region: " + country.region + " ...");
+                    lastRegion = country.region;
+                }
+
+                System.out.println("Country : " + country.name + " || City : " + city.name +  " || District : " + city.district +
+                        " || Region : " + country.region + " || Population : " + country.population);
+            } // end of while
+
+        } // end try
+        catch (SQLException e) {
+            System.out.println("SQL error occurred: " + e.getMessage());
+        }// end catch
+    }// end if
+}// end func
+
 //The top N populated capital cities in the world where N is provided by the user.
+public void all_capital_world_user_input(int limit) {
+    if (con != null) {
+        try {
+            Statement all_capital_world_user_input = con.createStatement();
+
+            String strSelect_all_capital_world_user_input = "SELECT country1.name, city1.name as city_name, country1.region, city1.district AS district, city1.population AS population "
+                    + "FROM country AS country1 "
+                    + "JOIN city AS city1 ON country1.capital = city1.id "
+                    + "ORDER BY population DESC "
+                    + "LIMIT " + limit;
+
+            ResultSet results_all_capital_world_user_input = all_capital_world_user_input.executeQuery(strSelect_all_capital_world_user_input);
+            while (results_all_capital_world_user_input.next()) {
+                Country country = new Country();
+                City city = new City();
+                city.name = results_all_capital_world_user_input.getString("city_name");
+                city.district = results_all_capital_world_user_input.getString("district");
+                country.name = results_all_capital_world_user_input.getString("name");
+                country.region = results_all_capital_world_user_input.getString("region");
+                country.population = results_all_capital_world_user_input.getInt("population");
+
+                System.out.println("Country : " + country.name + " || City : " + city.name + " || District : " + city.district +
+                        " || Region : " + country.region + " || Population : " + country.population);
+            } // end of while
+
+        } // end try
+        catch (SQLException e) {
+            System.out.println("SQL error occurred: " + e.getMessage());
+        }// end catch
+    }// end if
+}// end func
+
 //The top N populated capital cities in a continent where N is provided by the user.
+public void all_capital_world_by_continent_user_input(int limit) {
+    if (con != null) {
+        try {
+            Statement all_capital_world_by_continent_user_input = con.createStatement();
+
+            String strSelect_all_capital_world_by_continent_user_input = "SELECT country1.name, city1.name as city_name, country1.continent, country1.region, city1.district AS district, city1.population AS population "
+                    + "FROM country AS country1 "
+                    + "JOIN city AS city1 ON country1.capital = city1.id "
+                    + "WHERE ( "
+                    + "SELECT COUNT(*) FROM country AS country2 "
+                    + "JOIN city AS city2 ON country2.capital = city2.id "
+                    + "WHERE country2.continent = country1.continent AND city2.population > city1.population) "
+                    + "< " + limit
+                    + " ORDER BY country1.continent, city1.population DESC ";
+
+
+            ResultSet results_all_capital_world_by_continent_user_input = all_capital_world_by_continent_user_input.executeQuery(strSelect_all_capital_world_by_continent_user_input);
+
+            // null string for formatting results
+            String lastContinent = null;
+
+            while (results_all_capital_world_by_continent_user_input.next()) {
+                Country country = new Country();
+                City city = new City();
+                city.name = results_all_capital_world_by_continent_user_input.getString("city_name");
+                city.district = results_all_capital_world_by_continent_user_input.getString("district");
+                country.continent = results_all_capital_world_by_continent_user_input.getString("continent");
+                country.name = results_all_capital_world_by_continent_user_input.getString("name");
+                country.region = results_all_capital_world_by_continent_user_input.getString("region");
+                country.population = results_all_capital_world_by_continent_user_input.getInt("population");
+
+                if (lastContinent == null || !lastContinent.equals(country.continent)) {
+                    System.out.println("\n... Continent: " + country.continent + " ...");
+                    lastContinent = country.continent;
+                }
+
+                // note: not printing continent as it's a little redundant
+                System.out.println("Country : " + country.name + " || City : " + city.name +  " || District : " + city.district +
+                        " || Region : " + country.region + " || Population : " + country.population);
+            } // end of while
+
+        } // end try
+        catch (SQLException e) {
+            System.out.println("SQL error occurred: " + e.getMessage());
+        }// end catch
+    }// end if
+}// end func
+
 //The top N populated capital cities in a region where N is provided by the user.
+public void all_capital_world_by_region_user_input(int limit) {
+    if (con != null) {
+        try {
+            Statement all_capital_world_by_region_user_input = con.createStatement();
+
+            String strSelect_all_capital_world_by_region_user_input = "SELECT country1.name, city1.name as city_name, country1.continent, country1.region, city1.district AS district, city1.population AS population "
+                    + "FROM country AS country1 "
+                    + "JOIN city AS city1 ON country1.capital = city1.id "
+                    + "WHERE ( "
+                    + "SELECT COUNT(*) FROM country AS country2 "
+                    + "JOIN city AS city2 ON country2.capital = city2.id "
+                    + "WHERE country2.region = country1.region AND city2.population > city1.population) "
+                    + "< " + limit
+                    + " ORDER BY country1.region, city1.population DESC ";
+
+
+            ResultSet results_all_capital_world_by_region_user_input = all_capital_world_by_region_user_input.executeQuery(strSelect_all_capital_world_by_region_user_input);
+
+            // null string for formatting results
+            String lastRegion = null;
+
+            while (results_all_capital_world_by_region_user_input.next()) {
+                Country country = new Country();
+                City city = new City();
+                city.name = results_all_capital_world_by_region_user_input.getString("city_name");
+                city.district = results_all_capital_world_by_region_user_input.getString("district");
+                country.name = results_all_capital_world_by_region_user_input.getString("name");
+                country.region = results_all_capital_world_by_region_user_input.getString("region");
+                country.population = results_all_capital_world_by_region_user_input.getInt("population");
+
+                if (lastRegion == null || !lastRegion.equals(country.region)) {
+                    System.out.println("\n... Region: " + country.region + " ...");
+                    lastRegion = country.region;
+                }
+
+                // note: not printing continent as it's a little redundant
+                System.out.println("Country : " + country.name + " || City : " + city.name +  " || District : " + city.district +
+                        " || Region : " + country.region + " || Population : " + country.population);
+            } // end of while
+
+        } // end try
+        catch (SQLException e) {
+            System.out.println("SQL error occurred: " + e.getMessage());
+        }// end catch
+    }// end if
+}// end func
+
 //The population of people, people living in cities, and people not living in cities in each continent.
 //The population of people, people living in cities, and people not living in cities in each region.
 //The population of people, people living in cities, and people not living in cities in each country.
@@ -314,9 +557,15 @@ public void top_pop_district_user_input(int limit){
         a.connect();
         if (a.con != null) {
 
-            a.top_pop_region_user_input(3);
+           /* a.top_pop_region_user_input(3);
             a.top_pop_country_user_input(3);
             a.top_pop_district_user_input(3);
+            a.all_capital_world();
+            a.all_capital_world_by_continent();
+            a.all_capital_world_by_region();
+            a.all_capital_world_user_input(5);
+            a.all_capital_world_by_continent_user_input(4);*/
+            a.all_capital_world_by_region_user_input(6);
             a.disconnect();
 
         }
