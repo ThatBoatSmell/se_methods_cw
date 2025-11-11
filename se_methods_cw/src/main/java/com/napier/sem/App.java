@@ -164,6 +164,11 @@ public class App {
 // The top N populated cities in a region where N is provided by the user.
 
     public void top_pop_region_user_input(int limit){
+        if (limit <= 0) {
+            System.out.println("Invalid limit - must be greater than 0");
+            return;
+        }
+
         if (con != null){
             try{
                 Statement top_pop_region = con.createStatement();
@@ -217,6 +222,10 @@ public class App {
 
 //The top N populated cities in a country where N is provided by the user.
 public void top_pop_country_user_input(int limit){
+    if (limit <= 0) {
+        System.out.println("Invalid limit - must be greater than 0");
+        return;
+    }
     if (con != null){
         try{
             Statement top_pop_country = con.createStatement();
@@ -260,6 +269,10 @@ public void top_pop_country_user_input(int limit){
 
 //The top N populated cities in a district where N is provided by the user.
 public void top_pop_district_user_input(int limit){
+    if (limit <= 0) {
+        System.out.println("Invalid limit - must be greater than 0");
+        return;
+    }
     if (con != null){
         try{
             Statement top_pop_district = con.createStatement();
@@ -423,6 +436,10 @@ public void all_capital_world_by_region() {
 
 //The top N populated capital cities in the world where N is provided by the user.
 public void all_capital_world_user_input(int limit) {
+    if (limit <= 0) {
+        System.out.println("Invalid limit - must be greater than 0");
+        return;
+    }
     if (con != null) {
         try {
             Statement all_capital_world_user_input = con.createStatement();
@@ -505,6 +522,10 @@ public void all_capital_world_by_continent_user_input(int limit) {
 
 //The top N populated capital cities in a region where N is provided by the user.
 public void all_capital_world_by_region_user_input(int limit) {
+    if (limit <= 0) {
+        System.out.println("Invalid limit - must be greater than 0");
+        return;
+    }
     if (con != null) {
         try {
             Statement all_capital_world_by_region_user_input = con.createStatement();
