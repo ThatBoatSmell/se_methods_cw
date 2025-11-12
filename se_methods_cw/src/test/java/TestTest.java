@@ -100,5 +100,4 @@ class MyTest
         app.all_capital_world_by_region_user_input(invalid_limit);
     }
 
-
 }
