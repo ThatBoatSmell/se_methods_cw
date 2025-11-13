@@ -13,11 +13,11 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'       
-      - name: Package and Run docker compose
+      - name: Package and Start Services
         working-directory: ./se_methods_cw
         run: |
           mvn package -DskipTests
-          docker compose up --abort-on-container-exit
+          docker compose up -d
 
   UnitTests:
     name: Unit Tests
@@ -33,6 +33,10 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-      - name: Run Unit Tests
+      - name: Run Tests
         working-directory: ./se_methods_cw
-        run: docker compose run --rm app mvn test
+        run: |
+          docker compose run --rm app mvn test
+      - name: Stop Services
+        working-directory: ./se_methods_cw
+        run: docker compose down
