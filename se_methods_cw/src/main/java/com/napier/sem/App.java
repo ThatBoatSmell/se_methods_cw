@@ -109,7 +109,7 @@ public class App {
                         + "< " + limit
                         + " ORDER BY country1.region, city1.population DESC";
 
-                ResultSet results_top_pop_region = top_pop_region .executeQuery(strSelect_top_pop_region);
+                ResultSet results_top_pop_region = top_pop_region.executeQuery(strSelect_top_pop_region);
 
                 // null string for formatting results
                 String lastRegion = null;
@@ -515,6 +515,7 @@ public void all_capital_world_by_region_user_input(int limit) {
             a.all_capital_world_user_input(5);
             a.all_capital_world_by_continent_user_input(4);
             a.all_capital_world_by_region_user_input(6);
+            System.out.println("\n\nAll queries finished\n\n");
             a.disconnect();
 
         }

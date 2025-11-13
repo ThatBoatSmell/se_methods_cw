@@ -9,6 +9,7 @@ public class IntegrationTest {
     private Connection con;
 
     @BeforeEach
+    @Test
     public void start_up(){
         app = new App();
         app.connect();
