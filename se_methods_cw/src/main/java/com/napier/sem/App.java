@@ -84,83 +84,6 @@ public class App {
         return con;
     }
 
-    public void test() {
-        if (con != null) {
-            try {
-
-                // This is a basic statement to test connecting to the database.
-                Statement stmt = con.createStatement();
-                String strSelect = "SELECT capital, country.name, city.name, city.district "
-                        + "FROM country "
-                        + "JOIN city ON country.code = city.countryCode "
-                        + "WHERE city.district = 'Scotland' ";
-                ResultSet rset = stmt.executeQuery(strSelect);
-
-                while (rset.next()) {
-                    Country country = new Country();
-                    City city = new City();
-                    country.capital = rset.getString("capital");
-                    city.name = rset.getString("city.name");
-                    country.name = rset.getString("country.name");
-                    System.out.println("Country = " + country.name +  "City = " + city.name + ", Capital = " + country.capital);
-                }
-            }
-            catch (SQLException e) {
-                System.out.println("SQL error occurred: " + e.getMessage());
-            }
-        }
-    }
-
-    public void test2() {
-        if (con != null) {
-            try {
-                Statement stmt2 = con.createStatement();
-                String strSelect2 = "SELECT name, countrycode, district, population "
-                        + "FROM city "
-                        + "LIMIT 10";
-                ResultSet rset2 = stmt2.executeQuery(strSelect2);
-
-                while (rset2.next()) {
-                    City city = new City();
-                    city.name = rset2.getString("name");
-                    // city.countryCode = rset2.getInt("countryCode");
-                    // ", Country = " + city.countryCode +
-                    city.district = rset2.getString("district");
-                    city.population = rset2.getInt("population");
-                    System.out.println("Name = " + city.name + ", District = " + city.district + ", Population = " + city.population);
-                }
-            }
-            catch (SQLException e) {
-                System.out.println("SQL error occurred: " + e.getMessage());
-            }
-        }
-    }
-
-    public void test3() {
-        if (con != null) {
-            try {
-                Statement stmt3 = con.createStatement();
-
-                String strSelect3 = "Select country.name, city.name AS capital "
-                        + "FROM country "
-                        + "INNER JOIN city ON country.capital = city.id ";
-                        //+ "LIMIT 10"
-
-                ResultSet rset3 = stmt3.executeQuery(strSelect3);
-
-                while (rset3.next()) {
-                    Country country3 = new Country();
-                    country3.capital = rset3.getString("capital");
-                    country3.name = rset3.getString("name");
-                    System.out.println("Name = " + country3.name + ", Capital = " + country3.capital);
-                }
-            }
-            catch (SQLException e) {
-                System.out.println("SQL error occurred: " + e.getMessage());
-            }
-        }
-    }
-
 // The top N populated cities in a region where N is provided by the user.
 
     public void top_pop_region_user_input(int limit){
@@ -583,14 +506,14 @@ public void all_capital_world_by_region_user_input(int limit) {
         a.connect();
         if (a.con != null) {
 
-           /* a.top_pop_region_user_input(3);
+            a.top_pop_region_user_input(3);
             a.top_pop_country_user_input(3);
             a.top_pop_district_user_input(3);
             a.all_capital_world();
             a.all_capital_world_by_continent();
             a.all_capital_world_by_region();
             a.all_capital_world_user_input(5);
-            a.all_capital_world_by_continent_user_input(4);*/
+            a.all_capital_world_by_continent_user_input(4);
             a.all_capital_world_by_region_user_input(6);
             a.disconnect();
 
