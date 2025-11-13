@@ -4,7 +4,7 @@ import java.sql.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class MyTest
+class TestTest
 {
    private App app;
    private Connection con;
