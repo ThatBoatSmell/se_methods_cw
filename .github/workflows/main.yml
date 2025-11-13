@@ -18,6 +18,7 @@ jobs:
         run: ls -R    
         
       - name: Package and Run docker compose
+        working-directory: ./se_methods_cw
         run: |
           mvn package -DskipTests
           docker compose up --abort-on-container-exit
