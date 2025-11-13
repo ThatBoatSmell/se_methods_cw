@@ -35,4 +35,4 @@ jobs:
           distribution: 'adopt'
       - name: Run Unit Tests
         working-directory: ./se_methods_cw
-        run: mvn test
+        run: docker compose run --rm app mvn test
