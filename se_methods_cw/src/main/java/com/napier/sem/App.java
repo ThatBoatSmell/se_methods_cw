@@ -506,14 +506,23 @@ public void all_capital_world_by_region_user_input(int limit) {
         a.connect();
         if (a.con != null) {
 
+            System.out.println("\nRunning The top N populated cities in a region where N is provided by the user.\n");
             a.top_pop_region_user_input(3);
+            System.out.println("\nThe top N populated cities in a country where N is provided by the user.\n");
             a.top_pop_country_user_input(3);
+            System.out.println("\nThe top N populated cities in a district where N is provided by the user.\n");
             a.top_pop_district_user_input(3);
+            System.out.println("\nAll the capital cities in the world organised by largest population to smallest.\n");
             a.all_capital_world();
+            System.out.println("\nAll the capital cities in a continent organised by largest population to smallest.\n");
             a.all_capital_world_by_continent();
+            System.out.println("\nAll the capital cities in a continent organised by largest population to smallest.\n");
             a.all_capital_world_by_region();
+            System.out.println("\nThe top N populated capital cities in the world where N is provided by the user.\n");
             a.all_capital_world_user_input(5);
+            System.out.println("\nThe top N populated capital cities in a continent where N is provided by the user.\n");
             a.all_capital_world_by_continent_user_input(4);
+            System.out.println("\nThe top N populated capital cities in a region where N is provided by the user.\n");
             a.all_capital_world_by_region_user_input(6);
             System.out.println("\n\nAll queries finished\n\n");
             a.disconnect();
