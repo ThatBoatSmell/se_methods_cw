@@ -512,11 +512,11 @@ public class App {
                     long totalPop = rsetPopReportCountry.getLong("total_population");
                     long nonCityPop = rsetPopReportCountry.getLong("city_population");
                     long CityPop = totalPop - nonCityPop;
-                    double cityPercent = (double) cityPop / totalPop * 100;
+                    double cityPercent = (double) CityPop / totalPop * 100;
                     double nonCityPercent = (double) nonCityPop / totalPop * 100;
                     System.out.println("Country = " + name);
                     System.out.println("Total Population = " + totalPop);
-                    System.out.println("City Population = " + cityPop + " (" + String.format("%.2f", cityPercent) + "%)");
+                    System.out.println("City Population = " + CityPop + " (" + String.format("%.2f", cityPercent) + "%)");
                     System.out.println("Non-City Population = " + nonCityPop + " (" + String.format("%.2f", nonCityPercent) + "%)");
                 }
 
