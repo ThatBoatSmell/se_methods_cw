@@ -17,7 +17,7 @@ jobs:
           distribution: 'adopt'
       - name: Integration Tests
         run: |
-          docker build -t database ./db 
+          docker build -t database ./se_methods_cw/db 
           docker run --name db -dp 33060:3306 database
           mvn -Dtest=com.napier.sem.IntegrationTest test
           docker stop db
