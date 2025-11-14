@@ -15,12 +15,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-      - name: Debug — show current path and files
-        run: |
-          echo "Current directory:"
-          pwd
-          echo "Contents:"
-          ls -R .
+
       - name: Integration Tests
         run: |
           docker build -t database ./db 
@@ -29,9 +24,9 @@ jobs:
           docker stop db
           docker rm db 
           docker image rm database
-          working-directory: .  
+          working-directory: ./se_methods_cw 
       - name: Package and Run docker compose
         run: |
           mvn package -DskipTests
           docker compose up --abort-on-container-exit
-          working-directory: .  
+          working-directory: ./se_methods_cw 
