@@ -16,7 +16,8 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Integration Tests
+      - name: Integration Tests 
+        working-directory: ./se_methods_cw 
         run: |
           docker build -t database ./db 
           docker run --name db -dp 33060:3306 database
@@ -24,7 +25,7 @@ jobs:
           docker stop db
           docker rm db 
           docker image rm database
-          working-directory: ./se_methods_cw 
+         
       - name: Package and Run docker compose
         run: |
           mvn package -DskipTests
