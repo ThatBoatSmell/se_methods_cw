@@ -52,8 +52,8 @@ public class App {
                 // Wait a bit for db to start
                 Thread.sleep(1000);
                 // Connect to database
-                // this may need to be changed back to db:3306 instead of localhost:33060 !!! - changed back to db:3306 for github actions
-                con = DriverManager.getConnection("jdbc:mysql://db:3306/world?useSSL=false&allowPublicKeyRetrieval=true", "root", "example");
+                // this may need to be changed back to db:3306 instead of localhost:33060 !!! - changed back to db:3306 for github actions - changed back to localhost again just to see
+                con = DriverManager.getConnection("jdbc:mysql://localhost:33060 /world?useSSL=false&allowPublicKeyRetrieval=true", "root", "example");
                 System.out.println("Successfully connected");
                 // Wait a bit
                 Thread.sleep(1000);
