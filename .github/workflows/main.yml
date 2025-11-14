@@ -15,34 +15,16 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-
-      - name: Build JAR
-        working-directory: ./se_methods_cw
-        run: mvn package -DskipTests
-        
-      - name: Build Docker images
+          
+      - name: Integration Tests
         working-directory: ./se_methods_cw
         run: |
-          docker build -t database ./db
-          docker build -t app .
-
-      - name: Run Integration Tests
-        working-directory: ./se_methods_cw
-        run: |
-          # Start DB container in detached mode
-          docker compose up -d db
-
-          # Wait for MySQL to be ready
-          echo "Waiting for MySQL..."
-          until docker exec db mysqladmin ping -h "localhost" --silent; do
-            sleep 2
-          done
-
-          # Run tests inside the app container
-          docker compose run --rm app mvn -Dtest=IntegrationTest test
-
-          # Bring down services
-          docker compose down
+          docker build -t database ./db 
+          docker run --name db -dp 33060:3306 database
+          mvn -Dtest=com.napier.sem.IntegrationTest test
+          docker stop db
+          docker rm db 
+          docker image rm database
 
       - name: Package Application
         working-directory: ./se_methods_cw
