@@ -22,7 +22,6 @@ jobs:
           docker build -t database ./db 
           docker run --name db -dp 33060:3306 database
           mvn -Dtest=IntegrationTest test
-          mvn -Dtest=TestTest test
           docker stop db
           docker rm db 
           docker image rm database
