@@ -4,6 +4,13 @@ services:
   # Build app from Dockerfile in same folder
   app:
     build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
 
   # Build the db as name world from the Dockerfile in the db folder
   # exposing the port if we want to run code outside a container
@@ -12,4 +19,3 @@ services:
     restart: always
     ports:
       - "33060:3306"
-
