@@ -1,6 +1,7 @@
 name: A workflow
 on: push
-
+permissions:
+  contents: write
 jobs:
   IntegrationTests:
     runs-on: ubuntu-22.04
