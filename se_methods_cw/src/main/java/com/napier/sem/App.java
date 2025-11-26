@@ -161,7 +161,7 @@ public class App {
             try {
                 Thread.sleep(1000);
                 // db:3060 localhost:30600
-                con = DriverManager.getConnection("jdbc:mysql://localhost:30600/world?useSSL=false&allowPublicKeyRetrieval=true", "root", "example");
+                con = DriverManager.getConnection("jdbc:mysql://db:3060/world?useSSL=false&allowPublicKeyRetrieval=true", "root", "example");
                 System.out.println("Successfully connected");
                 break;
             } catch (SQLException sqle) {
