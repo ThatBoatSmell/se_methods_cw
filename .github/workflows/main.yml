@@ -1,3 +1,4 @@
+
 name: A workflow
 on: push
 
@@ -16,7 +17,7 @@ jobs:
          java-version: '17'
          distribution: 'adopt'
      - name: Integration Tests
-       working-directory: ./
+       working-directory: ./se_methods_cw
        run: |
          docker build -t database ./db 
          docker run --name db -dp 33060:3306 database
