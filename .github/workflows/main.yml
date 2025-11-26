@@ -24,7 +24,7 @@ jobs:
           docker stop db
           docker rm db 
           docker image rm database
-build:
+  build:
     name: Build Run in Docker and Deploy Release
     runs-on: ubuntu-22.04
     steps:
