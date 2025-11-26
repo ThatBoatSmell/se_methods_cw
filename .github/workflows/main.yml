@@ -15,15 +15,16 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-
+          
       - name: Integration Tests
         run: |
-          docker build -t database ./se_methods_cw/db
+          docker build -t database ./se_methods_cw/db 
           docker run --name db -dp 33060:3306 database
-          mvn -f ./pom.xml -Dtest=IntegrationTest test
+          mvn -Dtest=IntegrationTest test
           docker stop db
           docker rm db 
           docker image rm database
+
 
   build:
     name: Build Run in Docker and Deploy Release
