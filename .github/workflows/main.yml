@@ -42,8 +42,9 @@ jobs:
           distribution: 'adopt'
 
       - name: Package and Run docker compose
+        working-directory: ./se_methods_cw
         run: |
-          mvn -f ./se_methods_cw/pom.xml package -DskipTests
+          mvn package -DskipTests
           docker compose up --abort-on-container-exit
 
       - uses: "marvinpinto/action-automatic-releases@latest"
