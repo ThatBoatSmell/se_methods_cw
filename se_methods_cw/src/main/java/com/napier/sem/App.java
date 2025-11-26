@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.sql.*;
 import java.util.ArrayList;
 
-
-
 @SpringBootApplication
 @RestController
 public class App {
@@ -147,6 +145,10 @@ public class App {
 
     // ========== DATABASE CONNECTION METHODS ==========
 
+    /**
+     * Connect to database with flexible host/port configuration
+     * Tries Docker configuration first (db:3306), then falls back to localhost:33060
+     */
     public void connect() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -155,22 +157,68 @@ public class App {
             System.exit(-1);
         }
 
-        int retries = 10;
-        for (int i = 0; i < retries; ++i) {
-            System.out.println("Connecting to database...");
+        // Try Docker configuration first (for production/Docker environment)
+        String dockerHost = "db";
+        int dockerPort = 3306;
+
+        // Try localhost configuration (for local testing)
+        String localHost = "localhost";
+        int localPort = 33060;
+
+        // Check environment variable to determine which to use
+        String dbHost = System.getenv("DB_HOST");
+        String dbPortStr = System.getenv("DB_PORT");
+
+        if (dbHost != null && dbPortStr != null) {
+            // Use environment variables if set
             try {
-                Thread.sleep(1000);
-                // db:3060 localhost:30600
-                con = DriverManager.getConnection("jdbc:mysql://db:3060/world?useSSL=false&allowPublicKeyRetrieval=true", "root", "example");
-                System.out.println("Successfully connected");
-                break;
-            } catch (SQLException sqle) {
-                System.out.println("Failed to connect to database attempt " + (i + 1));
-                System.out.println(sqle.getMessage());
-            } catch (InterruptedException ie) {
-                System.out.println("Thread interrupted? Should not happen.");
+                int dbPort = Integer.parseInt(dbPortStr);
+                if (tryConnect(dbHost, dbPort)) {
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid DB_PORT environment variable");
             }
         }
+
+        // Try Docker first
+        System.out.println("Attempting Docker database connection (db:3306)...");
+        if (tryConnect(dockerHost, dockerPort)) {
+            return;
+        }
+
+        // Fall back to localhost
+        System.out.println("Docker connection failed, trying localhost (localhost:33060)...");
+        if (tryConnect(localHost, localPort)) {
+            return;
+        }
+
+        System.out.println("Failed to connect to database with all configurations");
+    }
+
+    /**
+     * Try to connect to database with given host and port
+     */
+    private boolean tryConnect(String host, int port) {
+        int retries = 10;
+        for (int i = 0; i < retries; i++) {
+            try {
+                Thread.sleep(1000);
+                String url = String.format("jdbc:mysql://%s:%d/world?useSSL=false&allowPublicKeyRetrieval=true", host, port);
+                con = DriverManager.getConnection(url, "root", "example");
+                System.out.println("Successfully connected to " + host + ":" + port);
+                return true;
+            } catch (SQLException sqle) {
+                System.out.println("Failed to connect to " + host + ":" + port + " attempt " + (i + 1));
+                if (i == retries - 1) {
+                    System.out.println("Final error: " + sqle.getMessage());
+                }
+            } catch (InterruptedException ie) {
+                System.out.println("Thread interrupted? Should not happen.");
+                return false;
+            }
+        }
+        return false;
     }
 
     public void disconnect() {

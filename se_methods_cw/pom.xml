@@ -13,7 +13,7 @@
         <version>2.7.18</version>
     </parent>
     <properties>
-        <skipTests>true</skipTests>
+<!--        <skipTests>true</skipTests>-->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
