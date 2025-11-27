@@ -1,6 +1,12 @@
 import com.napier.sem.App;
-import org.junit.jupiter.api.*;
-import java.sql.*;
+import com.napier.sem.PopulationReport;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.sql.Connection;
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IntegrationTest {
@@ -9,99 +15,97 @@ public class IntegrationTest {
     private Connection con;
 
     @BeforeEach
-    @Test
-    public void start_up(){
+    public void setUp() {
         app = new App();
         app.connect();
         con = app.getConnection();
     }
 
     @AfterEach
-    public void shut_down(){
+    public void tearDown() {
         app.disconnect();
     }
 
     @Test
-    void test_all_capital_world() {
-        app.all_capital_world();
-    }
-
-    // this test checks that the function top_pop_region_user_input correctly handles a valid input
-    @Test
-    public void top_pop_region_valid_input(){
-        int valid_limit = 4;
-        app.top_pop_country_user_input(valid_limit);
-    }
-
-    // this test checks that the function top_pop_region_user_input correctly handles an invalid input
-    @Test
-    public void top_pop_region_invalid_input(){
-        int invalid_limit = -1;
-        app.top_pop_country_user_input(invalid_limit);
-    }
-
-    // tests valid input in the top_pop_country_user_input function
-    @Test
-    public void top_pop_country_valid_input(){
-        int valid_limit = 5;
-        app.top_pop_country_user_input(valid_limit);
-
-    }
-
-    // tests invalid input in the top_pop_country_user_input function
-    @Test
-    public void top_pop_country_invalid_input(){
-        int invalid_limit = -2;
-        app.top_pop_country_user_input(invalid_limit);
-    }
-
-    // same again but for all_capital_world_user_input function
-    @Test
-    public void all_capital_world_valid_input(){
-        int valid_limit = 5;
-        app.all_capital_world_user_input(valid_limit);
-    }
-
-    // and an invalid one
-    @Test
-    public void all_capital_world_invalid_input(){
-        int invalid_limit = -23;
-        app.all_capital_world_user_input(invalid_limit);
-    }
-    // and the rest, following the same pattern
-    @Test
-    public void top_pop_district_valid_input(){
-        int valid_limit = 5;
-        app.top_pop_district_user_input(valid_limit);
+    void testDatabaseConnectionNotNull() {
+        assertNotNull(con, "Connection should not be null after connect()");
     }
 
     @Test
-    public void top_pop_district_invalid_input(){
-        int invalid_limit = 0;
-        app.top_pop_district_user_input(invalid_limit);
+    void testPopulationByContinentDataNotEmpty() {
+        ArrayList<PopulationReport> reports = app.getPopulationByContinentData();
+
+        assertNotNull(reports, "Reports list should not be null");
+        assertFalse(reports.isEmpty(), "Reports list for continents should not be empty");
+
+        for (PopulationReport report : reports) {
+            assertNotNull(report, "Report should not be null");
+            assertNotNull(report.name, "Continent name should not be null");
+            assertTrue(report.totalPopulation >= 0, "Total population should be >= 0");
+            assertEquals(
+                    report.totalPopulation,
+                    report.cityPopulation + report.nonCityPopulation,
+                    "Total population should equal city + non-city population"
+            );
+        }
     }
 
     @Test
-    public void all_capital_world_by_continent_valid_input(){
-        int valid_limit = 2;
-        app.all_capital_world_by_continent_user_input(valid_limit);
+    void testPopulationByRegionDataNotEmpty() {
+        ArrayList<PopulationReport> reports = app.getPopulationByRegionData();
+
+        assertNotNull(reports, "Reports list should not be null");
+        assertFalse(reports.isEmpty(), "Reports list for regions should not be empty");
+
+        for (PopulationReport report : reports) {
+            assertNotNull(report, "Report should not be null");
+            assertNotNull(report.name, "Region name should not be null");
+            assertTrue(report.totalPopulation >= 0, "Total population should be >= 0");
+            assertEquals(
+                    report.totalPopulation,
+                    report.cityPopulation + report.nonCityPopulation,
+                    "Total population should equal city + non-city population"
+            );
+        }
     }
 
     @Test
-    public void all_capital_world_by_continent_invalid_input(){
-        int valid_limit = -2;
-        app.all_capital_world_by_continent_user_input(valid_limit);
+    void testPopulationByCountryDataNotEmpty() {
+        ArrayList<PopulationReport> reports = app.getPopulationByCountryData();
+
+        assertNotNull(reports, "Reports list should not be null");
+        assertFalse(reports.isEmpty(), "Reports list for countries should not be empty");
+
+        for (PopulationReport report : reports) {
+            assertNotNull(report, "Report should not be null");
+            assertNotNull(report.name, "Country name should not be null");
+            assertTrue(report.totalPopulation >= 0, "Total population should be >= 0");
+            assertEquals(
+                    report.totalPopulation,
+                    report.cityPopulation + report.nonCityPopulation,
+                    "Total population should equal city + non-city population"
+            );
+        }
     }
 
     @Test
-    public void all_capital_world_by_region_valid_input(){
-        int valid_limit = 2;
-        app.all_capital_world_by_region_user_input(valid_limit);
+    void testContinentEndpointHtmlContainsTable() {
+        // This calls the Spring @RequestMapping method directly, without MockMvc
+        String html = app.getPopulationByContinent();
+
+        assertNotNull(html, "HTML response should not be null");
+        assertTrue(html.contains("<table>"), "HTML should contain a table");
+        assertTrue(html.contains("Population by Continent"),
+                "HTML should contain the report title");
     }
 
     @Test
-    public void all_capital_world_by_region_invalid_input(){
-        int invalid_limit = -21213413;
-        app.all_capital_world_by_region_user_input(invalid_limit);
+    void testHomePageContainsLinks() {
+        String html = app.home();
+
+        assertNotNull(html, "Home HTML should not be null");
+        assertTrue(html.contains("/population/continent"), "Home page should link to continent report");
+        assertTrue(html.contains("/population/region"), "Home page should link to region report");
+        assertTrue(html.contains("/population/country"), "Home page should link to country report");
     }
 }
