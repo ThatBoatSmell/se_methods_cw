@@ -244,12 +244,18 @@ public class App {
             try {
                 Statement stmt = con.createStatement();
 
-                String query = "SELECT country.continent, " +
-                        "SUM(country.population) AS total_population, " +
-                        "COALESCE(SUM(city.population), 0) AS city_population " +
-                        "FROM country " +
-                        "LEFT JOIN city ON country.code = city.countryCode " +
-                        "GROUP BY country.continent " +
+                String query = "SELECT continent, " +
+                        "SUM(total_pop) AS total_population, " +
+                        "SUM(city_pop) AS city_population " +
+                        "FROM ( " +
+                        "    SELECT country.continent, " +
+                        "    country.population AS total_pop, " +
+                        "    COALESCE(SUM(city.population), 0) AS city_pop " +
+                        "    FROM country " +
+                        "    LEFT JOIN city ON country.code = city.countryCode " +
+                        "    GROUP BY country.code, country.continent, country.population " +
+                        ") AS subquery " +
+                        "GROUP BY continent " +
                         "ORDER BY total_population DESC";
 
                 ResultSet rs = stmt.executeQuery(query);
@@ -285,12 +291,18 @@ public class App {
             try {
                 Statement stmt = con.createStatement();
 
-                String query = "SELECT country.region, " +
-                        "SUM(country.population) AS total_population, " +
-                        "COALESCE(SUM(city.population), 0) AS city_population " +
-                        "FROM country " +
-                        "LEFT JOIN city ON country.code = city.countryCode " +
-                        "GROUP BY country.region " +
+                String query = "SELECT region, " +
+                        "SUM(total_pop) AS total_population, " +
+                        "SUM(city_pop) AS city_population " +
+                        "FROM ( " +
+                        "    SELECT country.region, " +
+                        "    country.population AS total_pop, " +
+                        "    COALESCE(SUM(city.population), 0) AS city_pop " +
+                        "    FROM country " +
+                        "    LEFT JOIN city ON country.code = city.countryCode " +
+                        "    GROUP BY country.code, country.region, country.population " +
+                        ") AS subquery " +
+                        "GROUP BY region " +
                         "ORDER BY total_population DESC";
 
                 ResultSet rs = stmt.executeQuery(query);
@@ -326,7 +338,8 @@ public class App {
             try {
                 Statement stmt = con.createStatement();
 
-                String query = "SELECT country.name, country.population AS total_population, " +
+                String query = "SELECT country.name, " +
+                        "country.population AS total_population, " +
                         "COALESCE(SUM(city.population), 0) AS city_population " +
                         "FROM country " +
                         "LEFT JOIN city ON country.code = city.countryCode " +
