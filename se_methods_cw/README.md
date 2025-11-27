@@ -22,14 +22,34 @@ This project demonstrates:
 
 ## 📁 Project Structure
 se_methods_cw/
-├── src/                 # main application code
-├── tests/               # automated unit tests
 ├── .github/
-│   ├── ISSUE_TEMPLATE/  # bug_report.yml, feature_request.yml (created via GitHub UI)
-│   └── workflows/       # GitHub Actions CI workflow
-├── CODE_OF_CONDUCT.md
-├── CONTRIBUTING.md
-└── README.md
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.yml
+│   │   └── feature_request.yml
+│   └── workflows/
+│       └── main.yml
+├── se_methods_cw/
+│   ├── db/                     # Database init scripts (for Docker)
+│   ├── img/                    # Images and references
+│   └── src/
+│       ├── main/
+│       │   ├── java/
+│       │   │   └── com/napier/sem/
+│       │   │       ├── App.java
+│       │   │       ├── City.java
+│       │   │       ├── Country.java
+│       │   │       └── PopulationReport.java
+│       │   └── resources/
+│       └── test/
+│           └── java/
+│               ├── IntegrationTest.java
+│               └── SmokeTest.java
+├── docker-compose.yml
+├── Dockerfile
+├── pom.xml
+├── LICENSE
+├── README.md
+└── world reference.PNG
 
 
 ---
