@@ -18,45 +18,20 @@ This project demonstrates:
 - CI workflow (`main.yml`)  
 - Proper documentation and repository setup following SE Methods requirements
 
----
-
-## 📁 Project Structure
-se_methods_cw/
-├── .github/
-│   ├── ISSUE_TEMPLATE/
-│   │   ├── bug_report.yml
-│   │   └── feature_request.yml
-│   └── workflows/
-│       └── main.yml
-├── se_methods_cw/
-│   ├── db/                     # Database init scripts (for Docker)
-│   ├── img/                    # Images and references
-│   └── src/
-│       ├── main/
-│       │   ├── java/
-│       │   │   └── com/napier/sem/
-│       │   │       ├── App.java
-│       │   │       ├── City.java
-│       │   │       ├── Country.java
-│       │   │       └── PopulationReport.java
-│       │   └── resources/
-│       └── test/
-│           └── java/
-│               ├── IntegrationTest.java
-│               └── SmokeTest.java
-├── docker-compose.yml
-├── Dockerfile
-├── pom.xml
-├── LICENSE
-├── README.md
-└── world reference.PNG
-
-
----
-
 ## 🧪 Compile the project
-# Compile the project with **runned dockerfile in db directory**
+```bash
+# Compile the project with runned dockerfile in db directory
 mvn compile
 
 # Run all tests
 mvn test
+```
+## 👥 Contributors
+
+Andrii Konovaliuk & Cailean Smith — developers
+
+Edinburgh Napier University project for Software Engineering Methods
+
+## 📄 License
+
+This project is licensed under the MIT License (see LICENSE file).
