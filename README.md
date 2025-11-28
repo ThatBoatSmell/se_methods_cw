@@ -10,7 +10,7 @@ This repository contains coursework for the **Software Engineering Methods** mod
 > The original source project is **sem-quick-cw**.
 
 This project demonstrates:
-- Clean Python project structure  
+- Clean Java project structure  
 - Automated testing using GitHub Actions  
 - GitHub Issue Templates (Bug Report + Feature Request)  
 - Contribution Guidelines  
